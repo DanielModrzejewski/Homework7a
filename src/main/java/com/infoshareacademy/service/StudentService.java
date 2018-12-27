@@ -1,17 +1,16 @@
 package com.infoshareacademy.service;
 
 
+import com.infoshareacademy.dao.ComputerDao;
 import com.infoshareacademy.dao.StudentDao;
+import com.infoshareacademy.model.Computer;
 import com.infoshareacademy.model.Student;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -30,6 +29,9 @@ public class StudentService {
     @Inject
     private StudentDao studentDao;
 
+    @Inject
+    private ComputerDao computerDao;
+
     public StudentService() {
     }
 
@@ -40,8 +42,8 @@ public class StudentService {
         String resp = new String();
         final List<Student> result = studentDao.findAll();
         LOG.info("Found {} objects", result.size());
-        for (Student p : result) {
-            resp+=(p.toString() + "\n");
+        for (Student s : result) {
+            resp+=(s.toString() + "\n");
         }
         return Response.ok(resp).build();
     }
@@ -53,8 +55,22 @@ public class StudentService {
         String resp = new String();
         final List<Student> result = studentDao.findByName(n);
         LOG.info("Found {} objects", result.size());
-        for (Student p : result) {
-            resp+=(p.toString() + "\n");
+        for (Student s : result) {
+            resp+=(s.toString() + "\n");
+        }
+        return Response.ok(resp).build();
+    }
+
+    @POST
+    @Path("/computers")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response authenticate(Computer computer) {
+        computerDao.save(computer);
+        String resp = new String();
+        final List<Computer> result = computerDao.findAll();
+        LOG.info("Found {} objects", result.size());
+        for (Computer c : result) {
+            resp+=(c.toString() + "\n");
         }
         return Response.ok(resp).build();
     }

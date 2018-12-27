@@ -38,7 +38,7 @@ public class StudentService {
     @GET
     @Path("/students")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response sayHello() {
+    public Response showAllStudents() {
         String resp = new String();
         final List<Student> result = studentDao.findAll();
         LOG.info("Found {} objects", result.size());
@@ -51,7 +51,7 @@ public class StudentService {
     @GET
     @Path("/students/{name}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response sayHello(@PathParam("name") String n) {
+    public Response getStudentsByName(@PathParam("name") String n) {
         String resp = new String();
         final List<Student> result = studentDao.findByName(n);
         LOG.info("Found {} objects", result.size());
@@ -64,7 +64,7 @@ public class StudentService {
     @POST
     @Path("/computers")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response authenticate(Computer computer) {
+    public Response addComputer(Computer computer) {
         computerDao.save(computer);
         String resp = new String();
         final List<Computer> result = computerDao.findAll();
@@ -73,5 +73,18 @@ public class StudentService {
             resp+=(c.toString() + "\n");
         }
         return Response.ok(resp).build();
+    }
+
+    @DELETE
+    @Path("/computers/{id}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response deleteComputerById(@PathParam("id") String id) {
+        if (computerDao.findById(Long.valueOf(id))==null) {
+            LOG.info("No found computer wih id: ", id);
+            return Response.status(404).build();
+        }
+        LOG.info("Computer id: {} deleted", id);
+        computerDao.delete(Long.valueOf(id));
+        return Response.status(200).build();
     }
 }

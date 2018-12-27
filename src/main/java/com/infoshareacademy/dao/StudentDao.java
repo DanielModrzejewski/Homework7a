@@ -40,6 +40,13 @@ public class StudentDao {
         return query.getResultList();
     }
 
+    public List<Student> findByName(String name) {
+        final Query query = entityManager.createQuery("SELECT s FROM Student s WHERE s.name = :paramName");
+
+        query.setParameter("paramName", name);
+        return query.getResultList();
+    }
+
     public List<Student> findAllBornAfter(LocalDate ld) {
         final Query query = entityManager.createNamedQuery(
             "Student.findBornAfter"

@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -38,6 +39,19 @@ public class StudentService {
     public Response sayHello() {
         String resp = new String();
         final List<Student> result = studentDao.findAll();
+        LOG.info("Found {} objects", result.size());
+        for (Student p : result) {
+            resp+=(p.toString() + "\n");
+        }
+        return Response.ok(resp).build();
+    }
+
+    @GET
+    @Path("/students/{name}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response sayHello(@PathParam("name") String n) {
+        String resp = new String();
+        final List<Student> result = studentDao.findByName(n);
         LOG.info("Found {} objects", result.size());
         for (Student p : result) {
             resp+=(p.toString() + "\n");
